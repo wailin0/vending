@@ -14,33 +14,20 @@ const QR = ({navigation}) => {
         return str;
     }
 
-    async function example() {
-        const serialPort = await SerialPortAPI.open('/dev/ttyS3', {baudRate: 9600});
-
-        // subscribe received data
-        const sub = serialPort.onReceived(buff => {
-            const hex = buff.toString('hex');
-            setQrResult(hex_to_ascii(hex));
-        });
-
-        console.log(sub);
-        // unsubscribe
-        // sub.remove();
-
-        // close
-        serialPort.close();
-    }
-
     useEffect(() => {
         async function run() {
-            const serialPort = await SerialPortAPI.open('/dev/ttyS3', {baudRate: 9600});
+            try {
+                const serialPort = await SerialPortAPI.open('/dev/ttyS3', {baudRate: 9600});
 
-            // subscribe received data
-            const sub = serialPort.onReceived(buff => {
-                const hex = buff.toString('hex');
-                setQrResult(hex_to_ascii(hex));
-            });
-            console.log(sub);
+                // subscribe received data
+                const sub = serialPort.onReceived(buff => {
+                    const hex = buff.toString('hex');
+                    setQrResult(hex_to_ascii(hex));
+                });
+            }
+            catch (e) {
+                console.log(e)
+            }
         }
 
         run();

@@ -1,36 +1,83 @@
-import React, {useState} from 'react';
-import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Button, SafeAreaView, Text, TextInput, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
 
 const Card = ({navigation}) => {
     const [nfcResult, setNfcResult] = useState();
+    const [value, setValue] = useState('');
 
-    async function example() {
-        const serialPort = await SerialPortAPI.open('/dev/ttyS7', {baudRate: 115200});
+    const send = async () => {
+       try {
+           const serialPort = await SerialPortAPI.open("/dev/ttyS7", { baudRate: 115200 });
 
-        // subscribe received data
-        const sub = serialPort.onReceived(buff => {
-            const hex = buff.toString('hex');
-            setNfcResult(hex);
-        });
+           const sub = serialPort.onReceived(buff => {
+               console.log(buff.toString('hex').toUpperCase());
+           })
 
-        console.log(sub);
-        // unsubscribe
-        // sub.remove();
 
-        // close
-        serialPort.close();
+           // send data with hex format
+           await serialPort.send('00FF');
+
+           // close
+           serialPort.close();
+       }
+       catch (e) {
+           console.log(e)
+       }
     }
+
+    useEffect(() => {
+        async function run() {
+           try {
+               const serialPort = await SerialPortAPI.open('/dev/ttyS7', {baudRate: 115200});
+
+               // subscribe received data
+               const sub = serialPort.onReceived(buff => {
+                   const hex = buff.toString('hex');
+                   setNfcResult(hex);
+               });
+           }
+           catch (e) {
+               console.log(e)
+           }
+        }
+
+        run();
+    }, []);
 
     return (
         <SafeAreaView style={{flex: 1}}>
 
 
-            <Text style={{
-                color:'#000'
+            <View style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
             }}>
-                {nfcResult && nfcResult}
-            </Text>
+                <Text style={{
+                    color: '#000',
+                }}>
+                    {nfcResult && nfcResult}
+                </Text>
+            </View>
+
+
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <TextInput
+                    value={value}
+                    onChangeText={text => setValue(text)}
+                    style={{
+                        borderColor: '#000000',
+                        borderWidth: 1,
+                        borderRadius: 10,
+                        width: '80%',
+                        backgroundColor: 'white',
+                        height: 50,
+                        marginBottom: 20,
+                    }}
+                />
+                <Button title="send" onPress={send}/>
+            </View>
 
         </SafeAreaView>
     );
