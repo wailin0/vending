@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {SafeAreaView, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, Text, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
 
 const QR = ({navigation}) => {
@@ -31,16 +31,36 @@ const QR = ({navigation}) => {
         serialPort.close();
     }
 
+    useEffect(() => {
+        async function run() {
+            const serialPort = await SerialPortAPI.open('/dev/ttyS3', {baudRate: 9600});
+
+            // subscribe received data
+            const sub = serialPort.onReceived(buff => {
+                const hex = buff.toString('hex');
+                setQrResult(hex_to_ascii(hex));
+            });
+            console.log(sub);
+        }
+
+        run();
+    }, []);
+
     return (
         <SafeAreaView style={{flex: 1}}>
-
-
-            <Text style={{
-                color: '#000',
+            <View style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
             }}>
-                {qrResult && qrResult}
-            </Text>
+                <Text style={{
+                    color: '#000',
 
+                }}>
+                    {qrResult && qrResult}
+                </Text>
+
+            </View>
         </SafeAreaView>
     );
 };
