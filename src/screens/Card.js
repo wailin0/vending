@@ -10,16 +10,8 @@ const Card = ({navigation}) => {
        try {
            const serialPort = await SerialPortAPI.open("/dev/ttyS7", { baudRate: 115200 });
 
-           const sub = serialPort.onReceived(buff => {
-               console.log(buff.toString('hex').toUpperCase());
-           })
-
-
            // send data with hex format
-           await serialPort.send('00FF');
-
-           // close
-           serialPort.close();
+           await serialPort.send(value);
        }
        catch (e) {
            console.log(e)
@@ -34,6 +26,7 @@ const Card = ({navigation}) => {
                // subscribe received data
                const sub = serialPort.onReceived(buff => {
                    const hex = buff.toString('hex');
+                   console.log(hex)
                    setNfcResult(hex);
                });
            }
