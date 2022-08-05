@@ -7,32 +7,32 @@ const Card = ({navigation}) => {
     const [value, setValue] = useState('');
 
     const send = async () => {
-       try {
-           const serialPort = await SerialPortAPI.open("/dev/ttyS7", { baudRate: 115200 });
+        try {
+            const serialPort = await SerialPortAPI.open('/dev/ttyS7', {baudRate: 9600});
 
-           // send data with hex format
-           await serialPort.send(value);
-       }
-       catch (e) {
-           console.log(e)
-       }
-    }
+            // send data with hex format
+            await serialPort.send(value);
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     useEffect(() => {
         async function run() {
-           try {
-               const serialPort = await SerialPortAPI.open('/dev/ttyS7', {baudRate: 115200});
+            try {
+                SerialPortAPI.devicePaths(strings => console.log(strings));
+                SerialPortAPI.deviceNames(strings => console.log(strings));
+                const serialPort = await SerialPortAPI.open('/dev/ttyS7', {baudRate: 9600});
 
-               // subscribe received data
-               const sub = serialPort.onReceived(buff => {
-                   const hex = buff.toString('hex');
-                   console.log(hex)
-                   setNfcResult(hex);
-               });
-           }
-           catch (e) {
-               console.log(e)
-           }
+                // subscribe received data
+                const sub = serialPort.onReceived(buff => {
+                    const hex = buff.toString('hex');
+                    console.log(hex);
+                    setNfcResult(hex);
+                });
+            } catch (e) {
+                console.log(e);
+            }
         }
 
         run();

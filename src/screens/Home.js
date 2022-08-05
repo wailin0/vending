@@ -2,6 +2,7 @@ import React from 'react';
 import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
 
 const Home = ({navigation}) => {
+
     return (
         <SafeAreaView style={{flex: 1, justifyContent: 'space-evenly', alignItems: 'center'}}>
 
