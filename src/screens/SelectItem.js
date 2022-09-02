@@ -9,15 +9,21 @@ const SelectItem = ({navigation}) => {
     const startOver = async () => {
         const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
         await serialPort.send('0707');
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 1,
-                routes: [
-                    {name: 'Main'},
+        const sub = serialPort.onReceived(buff => {
+            const response = decodeVMC(buff);
+            if (response === '00') {
+                sub.remove();
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 1,
+                        routes: [
+                            {name: 'Main'},
 
-                ],
-            }),
-        );
+                        ],
+                    }),
+                );
+            }
+        });
     };
 
 
@@ -25,10 +31,11 @@ const SelectItem = ({navigation}) => {
         async function startSession() {
             try {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
-                serialPort.onReceived(buff => {
+                const sub = serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
                     console.log(response);
                     if (response.substr(0, 4) === '1300') {
+                        sub.remove();
                         console.log(response.substr(4, 4));
                         const price = parseInt(response.substr(4, 4), 16);
                         console.log(price);

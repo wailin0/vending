@@ -9,9 +9,10 @@ const Main = ({navigation}) => {
         try {
             const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
             await serialPort.send('03FFFF01');
-            serialPort.onReceived(buff => {
+            const sub = serialPort.onReceived(buff => {
                 const response = decodeVMC(buff);
                 if (response === '00') {
+                    sub.remove()
                     navigation.replace('Select Item');
                 }
             });

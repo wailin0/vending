@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import SerialPortAPI from 'react-native-serial-port-api';
+import {decodeVMC} from '../utils/vmc';
 
 const Result = ({navigation, route}) => {
 
@@ -12,10 +13,12 @@ const Result = ({navigation, route}) => {
             try {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
                 await serialPort.send('0707');
-                serialPort.onReceived(buff => {
-                    const hex = buff.toString('hex');
-                    console.log(hex);
-                    if (hex) {
+                const sub = serialPort.onReceived(buff => {
+                    const response = decodeVMC(buff);
+                    if (response === '00') {
+                        sub.remove();
+                        serialPort.close();
+                        navigation.replace('Select Item');
                         setTimeout(() => {
                             navigation.dispatch(
                                 CommonActions.reset({
