@@ -28,10 +28,10 @@ const SelectItem = ({navigation}) => {
                 serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
                     console.log(response);
-                    console.log(response.substr(4, 4));
-                    const price = parseInt(response.substr(4, 4), 16);
-                    console.log(price);
-                    if (price) {
+                    if (response.substr(0, 4) === '1300') {
+                        console.log(response.substr(4, 4));
+                        const price = parseInt(response.substr(4, 4), 16);
+                        console.log(price);
                         navigation.replace('Select Payment', {price});
                     }
                 });
