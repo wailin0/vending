@@ -12,23 +12,24 @@ const Result = ({navigation, route}) => {
         async function endSession() {
             try {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
-                await serialPort.send('0707');
                 const sub = serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
                     if (response === '00') {
-                        sub.remove();
-            
-                        setTimeout(() => {
-                            navigation.dispatch(
-                                CommonActions.reset({
-                                    index: 1,
-                                    routes: [
-                                        {name: 'Main'},
-
-                                    ],
-                                }),
-                            );
-                        }, 3000);
+                        serialPort.send('0707').then(res => {
+                            console.log(res)
+                        })
+                        // sub.remove();
+                        // setTimeout(() => {
+                        //     navigation.dispatch(
+                        //         CommonActions.reset({
+                        //             index: 1,
+                        //             routes: [
+                        //                 {name: 'Main'},
+                        //
+                        //             ],
+                        //         }),
+                        //     );
+                        // }, 3000);
                     }
                 });
             } catch (e) {
