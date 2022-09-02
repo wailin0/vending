@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Alert, Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import card from '../utils/card';
 
 const Card = ({navigation, route}) => {
@@ -7,33 +7,31 @@ const Card = ({navigation, route}) => {
     const {price} = route.params;
 
     const checkCard = async () => {
+        const slot = 0;
         try {
-            const r = await card.start();
-            console.log(r);
-
-            setInterval(async () => {
-                const r1 = await card.connect(0);
-                console.log(r1);
-                await card.selectApplet(0);
-                const verifyPin = await card.verifyPin(0);
-
+            await card.start();
+            const interval = setInterval(async () => {
+                await card.connect(slot);
+                await card.selectApplet(slot);
+                const verifyPin = await card.verifyPin(slot);
                 if (verifyPin === '9000') {
-                    const balance = await card.checkBalance(0);
-                    if (price > parseInt(balance.substring(0, balance.length - 4), 16)) {
+                    const balance = await card.checkBalance(slot);
+                    clearInterval(interval);
+                    console.log(parseInt(balance.substring(slot, balance.length - 4), 16));
+                    if (price > parseInt(balance.substring(slot, balance.length - 4), 16)) {
                         navigation.replace('Result', {
                             success: 0,
-                            result: 'not enough card balance',
+                            result: 'not enough oro card balance',
                         });
                     } else {
+                        await card.removeBalance(slot, price);
                         navigation.replace('Result', {
-                            success: 0,
-                            result: 'hi',
+                            success: 1,
+                            result: 'oro card payment success',
                         });
                     }
-                } else {
-                    alert('fail to scan ORO card');
                 }
-            }, 3000);
+            }, 2000);
         } catch (e) {
             alert(e);
         }
@@ -43,29 +41,29 @@ const Card = ({navigation, route}) => {
         checkCard();
     }, []);
 
-
-    useEffect(
-        () =>
-            navigation.addListener('beforeRemove', (e) => {
-                e.preventDefault();
-                Alert.alert(
-                    '',
-                    'Cancel ORO Card payment?',
-                    [
-                        {
-                            text: 'cancel',
-                            onPress: () => {
-                            },
-                        },
-                        {
-                            text: 'confirm',
-                            onPress: () => navigation.dispatch(e.data.action),
-                        },
-                    ],
-                );
-            }),
-        [navigation],
-    );
+    //
+    // useEffect(
+    //     () =>
+    //         navigation.addListener('beforeRemove', (e) => {
+    //             e.preventDefault();
+    //             Alert.alert(
+    //                 '',
+    //                 'Cancel ORO Card payment?',
+    //                 [
+    //                     {
+    //                         text: 'cancel',
+    //                         onPress: () => {
+    //                         },
+    //                     },
+    //                     {
+    //                         text: 'confirm',
+    //                         onPress: () => navigation.dispatch(e.data.action),
+    //                     },
+    //                 ],
+    //             );
+    //         }),
+    //     [navigation],
+    // );
 
     return (
         <SafeAreaView style={{flex: 1, marginHorizontal: 20}}>

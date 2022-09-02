@@ -28,6 +28,7 @@ const SelectItem = ({navigation}) => {
 
 
     useState(() => {
+        navigation.replace('Select Payment', {price: 2000 / 100});
         async function startSession() {
             try {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
@@ -35,8 +36,7 @@ const SelectItem = ({navigation}) => {
                     const response = decodeVMC(buff);
                     if (response.substr(0, 4) === '1300') {
                         sub.remove();
-                        console.log(response.substr(4, 4));
-                        const price = parseInt(response.substr(4, 4), 16);
+                        const price = parseInt(response.substr(4, 4), 16) / 100;
                         navigation.replace('Select Payment', {price});
                     }
                 });

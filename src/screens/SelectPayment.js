@@ -46,7 +46,7 @@ const startOver = async () => {
                     color: '#000',
                     fontWeight: 'bold',
                 }}>
-                    ₱ {price}
+                    ₱ {price.toFixed(2)}
                 </Text>
             </View>
             <View style={{
