@@ -14,24 +14,26 @@ const Result = ({navigation, route}) => {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
                 const sub = serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
-				console.log(response)
-                    //if (response === '00') {
-                      //  serialPort.send('0707').then(res => {
-                      //      console.log(res)
-                      //  })
-                        // sub.remove();
-                        // setTimeout(() => {
-                        //     navigation.dispatch(
-                        //         CommonActions.reset({
-                        //             index: 1,
-                        //             routes: [
-                        //                 {name: 'Main'},
-                        //
-                        //             ],
-                        //         }),
-                        //     );
-                        // }, 3000);
-                   // }
+                    if (response === '130417') {
+                        serialPort.send('0707').then(buff => {
+                            const response = decodeVMC(buff);
+                            if (response==="00"){
+                                sub.remove();
+                                setTimeout(() => {
+                                    navigation.dispatch(
+                                        CommonActions.reset({
+                                            index: 1,
+                                            routes: [
+                                                {name: 'Main'},
+
+                                            ],
+                                        }),
+                                    );
+                                }, 3000);
+                            }
+                        });
+
+                    }
                 });
             } catch (e) {
                 console.log(e);
