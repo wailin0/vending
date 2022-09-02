@@ -1,48 +1,38 @@
 import React, {useState} from 'react';
-import {Image, SafeAreaView, Text, View, Button} from 'react-native';
+import {Button, Image, SafeAreaView, Text, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
 import {CommonActions} from '@react-navigation/native';
+import {decodeVMC} from '../utils/vmc';
 
 const SelectItem = ({navigation}) => {
 
-function hex2a(hexx) {
-    var hex = hexx.toString();//force conversion
-    var str = '';
-    for (var i = 0; i < hex.length; i += 2)
-        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    return str;
-}
+    const startOver = async () => {
+        const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+        await serialPort.send('0707');
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    {name: 'Main'},
 
-const startover = async () => {
-  const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
-                await serialPort.send('0707');
-navigation.dispatch(
-                                CommonActions.reset({
-                                    index: 1,
-                                    routes: [
-                                        {name: 'Main'},
-
-                                    ],
-                                }),
-                            );
-}
+                ],
+            }),
+        );
+    };
 
 
     useState(() => {
         async function startSession() {
             try {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
-                await serialPort.send('03FFFF01');
                 serialPort.onReceived(buff => {
-                    const hex = buff.toString('hex');
-			const ascii = hex2a(hex)
-                    console.log(ascii.substring(1, ascii.length-1));
-                    if (hex) {
-                    //    navigation.replace('Select Payment', {
-                     //       item: {
-                      //          number: 3, price: 20,
-                      //      },
-                      //  });
+                    const response = decodeVMC(buff);
+                    console.log(response);
+                    console.log(response.substr(4, 4));
+                    const price = parseInt(response.substr(4, 4), 16);
+                    console.log(price);
+                    if (price) {
+                        navigation.replace('Select Payment', {price});
                     }
                 });
             } catch (e) {
@@ -79,7 +69,7 @@ navigation.dispatch(
                 />
             </View>
 
-		<Button title="startover" onPress={startover} />
+            <Button title="start over" onPress={startOver}/>
         </SafeAreaView>
     );
 };

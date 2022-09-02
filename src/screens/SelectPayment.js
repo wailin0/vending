@@ -3,10 +3,10 @@ import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 
 const SelectPayment = ({navigation, route}) => {
 
-    const {item} = route.params;
+    const {price} = route.params;
 
     const navigatePayment = async (type) => {
-        navigation.navigate(type, {item});
+        navigation.navigate(type, {price});
     };
 
     return (
@@ -17,19 +17,12 @@ const SelectPayment = ({navigation, route}) => {
                 justifyContent: 'center',
             }}>
                 <Text style={{
-                    fontSize: 20,
-                    color: '#000',
-                    fontWeight: 'bold',
-                }}>
-                    Item ({item.number})
-                </Text>
-                <Text style={{
                     marginTop: 10,
                     fontSize: 40,
                     color: '#000',
                     fontWeight: 'bold',
                 }}>
-                    ₱ {item.price}
+                    ₱ {price}
                 </Text>
             </View>
             <View style={{

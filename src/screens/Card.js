@@ -4,7 +4,7 @@ import card from '../utils/card';
 
 const Card = ({navigation, route}) => {
 
-    const {item} = route.params;
+    const {price} = route.params;
 
     const checkCard = async () => {
         try {
@@ -19,7 +19,7 @@ const Card = ({navigation, route}) => {
 
                 if (verifyPin === '9000') {
                     const balance = await card.checkBalance(0);
-                    if (item.price > parseInt(balance.substring(0, balance.length - 4), 16)) {
+                    if (price > parseInt(balance.substring(0, balance.length - 4), 16)) {
                         navigation.replace('Result', {
                             success: 0,
                             result: 'not enough card balance',

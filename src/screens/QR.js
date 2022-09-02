@@ -4,11 +4,11 @@ import QRCode from 'react-native-qrcode-svg';
 import api from '../services/api';
 import Loading from './Loading';
 import {configs} from '../utils/configs';
-
+import SerialPortAPI from 'react-native-serial-port-api';
 
 const QR = ({navigation, route}) => {
 
-    const {item} = route.params;
+    const {price} = route.params;
     const [qrData, setQRData] = useState(null);
 
     useEffect(() => {
@@ -55,20 +55,20 @@ const QR = ({navigation, route}) => {
     useEffect(() => {
         const postData = {
             'transaction_description': 'vending machine app purchase',
-            'transaction_amount': item.price.toFixed(2),
+            'transaction_amount': price.toFixed(2),
             'transaction_currency': 'PHP',
             'transaction_reference': (Math.random() + 1).toString(36).substring(2),
             'transaction_datetime': new Date(Date.now()),
             'items': [
                 {
                     'id': (Math.random() + 1).toString(36).substring(2),
-                    'name': item.number,
+                    'name': "vending machine app purchase",
                     'quantity': '1',
                     'picture_url': 'https://',
-                    'unit_price': item.price.toFixed(2),
+                    'unit_price': price.toFixed(2),
                 },
             ],
-            'trade_id': item.number,
+            'trade_id': (Math.random() + 1).toString(36).substring(2),
             'machine_tag': 'Vending Machine (Ground Floor)',
             'callback_URL': 'https://',
             'remark': '',
