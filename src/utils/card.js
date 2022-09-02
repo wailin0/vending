@@ -1,4 +1,4 @@
-import Reader from "react-native-acs";
+import Reader from 'react-native-acs';
 
 export const start = async () => {
     try {
