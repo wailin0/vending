@@ -24,7 +24,7 @@ const QR = ({navigation, route}) => {
                             'apiKey': configs.apiKey,
                         };
                         const response = await api.checkQR(postData);
-                        if (response.status === 0) {
+                        if (response.status === 1) {
                             await serialPort.send('05000A0F');
                             navigation.replace('Result', {
                                 success: 1,

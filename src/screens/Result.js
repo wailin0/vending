@@ -17,7 +17,8 @@ const Result = ({navigation, route}) => {
                     if (response === '130417') {
                         serialPort.send('0707').then(buff => {
                             const response = decodeVMC(buff);
-                            if (response==="00"){
+				
+                            
                                 sub.remove();
                                 setTimeout(() => {
                                     navigation.dispatch(
@@ -30,7 +31,7 @@ const Result = ({navigation, route}) => {
                                         }),
                                     );
                                 }, 3000);
-                            }
+                            
                         });
 
                     }

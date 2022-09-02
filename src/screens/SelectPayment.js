@@ -2,6 +2,7 @@ import React from 'react';
 import {SafeAreaView, Text,Button, TouchableOpacity, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
 import {CommonActions} from '@react-navigation/native';
+import {decodeVMC} from '../utils/vmc';
 
 const SelectPayment = ({navigation, route}) => {
 
