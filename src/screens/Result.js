@@ -14,10 +14,11 @@ const Result = ({navigation, route}) => {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
                 const sub = serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
-                    if (response === '00') {
-                        serialPort.send('0707').then(res => {
-                            console.log(res)
-                        })
+				console.log(response)
+                    //if (response === '00') {
+                      //  serialPort.send('0707').then(res => {
+                      //      console.log(res)
+                      //  })
                         // sub.remove();
                         // setTimeout(() => {
                         //     navigation.dispatch(
@@ -30,7 +31,7 @@ const Result = ({navigation, route}) => {
                         //         }),
                         //     );
                         // }, 3000);
-                    }
+                   // }
                 });
             } catch (e) {
                 console.log(e);

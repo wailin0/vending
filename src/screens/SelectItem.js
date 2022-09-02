@@ -33,12 +33,10 @@ const SelectItem = ({navigation}) => {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
                 const sub = serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
-                    console.log(response);
                     if (response.substr(0, 4) === '1300') {
                         sub.remove();
                         console.log(response.substr(4, 4));
                         const price = parseInt(response.substr(4, 4), 16);
-                        console.log(price);
                         navigation.replace('Select Payment', {price});
                     }
                 });

@@ -1,5 +1,7 @@
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView, Text,Button, TouchableOpacity, View} from 'react-native';
+import SerialPortAPI from 'react-native-serial-port-api';
+import {CommonActions} from '@react-navigation/native';
 
 const SelectPayment = ({navigation, route}) => {
 
@@ -7,6 +9,27 @@ const SelectPayment = ({navigation, route}) => {
 
     const navigatePayment = async (type) => {
         navigation.navigate(type, {price});
+    };
+
+
+const startOver = async () => {
+        const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+        await serialPort.send('0707');
+        const sub = serialPort.onReceived(buff => {
+            const response = decodeVMC(buff);
+            if (response === '00') {
+                sub.remove();
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 1,
+                        routes: [
+                            {name: 'Main'},
+
+                        ],
+                    }),
+                );
+            }
+        });
     };
 
     return (
@@ -80,24 +103,7 @@ const SelectPayment = ({navigation, route}) => {
 
             </View>
 
-            {/*<TouchableOpacity*/}
-            {/*    onPress={() => navigation.goBack()}*/}
-            {/*    style={{*/}
-            {/*        backgroundColor: '#2a3498',*/}
-            {/*        justifyContent: 'center',*/}
-            {/*        alignItems: 'center',*/}
-            {/*        borderRadius: 10,*/}
-            {/*        width: '100%',*/}
-            {/*        height: 50,*/}
-            {/*        marginBottom: 20,*/}
-            {/*    }}>*/}
-            {/*    <Text style={{*/}
-            {/*        fontSize: 15,*/}
-            {/*        color: '#fff',*/}
-            {/*    }}>*/}
-            {/*        START OVER*/}
-            {/*    </Text>*/}
-            {/*</TouchableOpacity>*/}
+               <Button title="start over" onPress={startOver}/>
         </SafeAreaView>
     );
 };
