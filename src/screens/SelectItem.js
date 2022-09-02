@@ -1,8 +1,31 @@
 import React, {useState} from 'react';
-import {Image, SafeAreaView, Text, View} from 'react-native';
+import {Image, SafeAreaView, Text, View, Button} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
+import {CommonActions} from '@react-navigation/native';
 
 const SelectItem = ({navigation}) => {
+
+function hex2a(hexx) {
+    var hex = hexx.toString();//force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+}
+
+const startover = async () => {
+  const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+                await serialPort.send('0707');
+navigation.dispatch(
+                                CommonActions.reset({
+                                    index: 1,
+                                    routes: [
+                                        {name: 'Main'},
+
+                                    ],
+                                }),
+                            );
+}
 
 
     useState(() => {
@@ -12,13 +35,14 @@ const SelectItem = ({navigation}) => {
                 await serialPort.send('03FFFF01');
                 serialPort.onReceived(buff => {
                     const hex = buff.toString('hex');
-                    console.log(hex);
+			const ascii = hex2a(hex)
+                    console.log(ascii.substring(1, ascii.length-1));
                     if (hex) {
-                        navigation.replace('Select Payment', {
-                            item: {
-                                number: 3, price: 20,
-                            },
-                        });
+                    //    navigation.replace('Select Payment', {
+                     //       item: {
+                      //          number: 3, price: 20,
+                      //      },
+                      //  });
                     }
                 });
             } catch (e) {
@@ -28,6 +52,7 @@ const SelectItem = ({navigation}) => {
 
         startSession();
     });
+
 
     return (
         <SafeAreaView style={{flex: 1}}>
@@ -53,6 +78,8 @@ const SelectItem = ({navigation}) => {
                     resizeMode="contain"
                 />
             </View>
+
+		<Button title="startover" onPress={startover} />
         </SafeAreaView>
     );
 };
