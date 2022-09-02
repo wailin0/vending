@@ -17,8 +17,7 @@ const Result = ({navigation, route}) => {
                     const response = decodeVMC(buff);
                     if (response === '00') {
                         sub.remove();
-                        serialPort.close();
-                        navigation.replace('Select Item');
+            
                         setTimeout(() => {
                             navigation.dispatch(
                                 CommonActions.reset({
