@@ -1,7 +1,8 @@
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
 import {decodeVMC} from '../utils/vmc';
+import {images} from '../constants/theme';
 
 const Main = ({navigation}) => {
 
@@ -13,7 +14,7 @@ const Main = ({navigation}) => {
             const sub = serialPort.onReceived(buff => {
                 const response = decodeVMC(buff);
                 if (response === '00') {
-                    sub.remove()
+                    sub.remove();
                     navigation.replace('Select Item');
                 }
             });
@@ -23,28 +24,43 @@ const Main = ({navigation}) => {
     };
 
     return (
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{
+            flex: 1, justifyContent: 'space-between',
+            alignItems: 'center',
+            marginHorizontal: 20,
+        }}>
+            <View style={{
+                flex: 3,
+                width: '100%',
+                height: '100%',
+            }}>
+                <Image source={{uri: images.welcome}}
+                       style={{
+                           width: '100%',
+                           height: '100%',
+                       }}
+                       resizeMode="contain"
+                />
+            </View>
             <View style={{
                 flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginHorizontal: 20,
+                width: '100%',
             }}>
                 <TouchableOpacity
                     onPress={start}
                     style={{
-                        backgroundColor: '#d09b9b',
+                        backgroundColor: '#2196F3',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        borderRadius: 20,
+                        borderRadius: 15,
                         width: '100%',
                         height: 60,
                     }}>
                     <Text style={{
                         color: '#fff',
-                        fontSize: 20,
+                        fontSize: 18,
                     }}>
-                        Touch To Start
+                        START
                     </Text>
                 </TouchableOpacity>
             </View>

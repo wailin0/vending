@@ -4,7 +4,6 @@ import QRCode from 'react-native-qrcode-svg';
 import api from '../services/api';
 import Loading from './Loading';
 import {configs} from '../utils/configs';
-import SerialPortAPI from 'react-native-serial-port-api';
 
 const QR = ({navigation, route}) => {
 
@@ -16,7 +15,7 @@ const QR = ({navigation, route}) => {
         if (qrData) {
             const checkQR = async () => {
                 try {
-                    const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+                    // const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
                     interval = setInterval(async () => {
                         const postData = {
                             'transaction_id': qrData.transaction_id,
@@ -25,16 +24,18 @@ const QR = ({navigation, route}) => {
                         };
                         const response = await api.checkQR(postData);
                         if (response.status === 1) {
-                            await serialPort.send('05000A0F');
+                            // await serialPort.send('05000A0F');
                             navigation.replace('Result', {
-                                success: 1,
-                                result: "qr payment success"
+                                success: true,
+                                result: 'QR Payment Success',
+                                message: '',
                             });
                         } else if (response.status === -1) {
-                            await serialPort.send('0606');
+                            //  await serialPort.send('0606');
                             navigation.replace('Result', {
-                                success: 0,
-                                result: "qr payment fail, invalid qr code"
+                                success: false,
+                                result: 'QR Payment Fail',
+                                message: 'invalid QR code',
                             });
                         }
 
@@ -62,7 +63,7 @@ const QR = ({navigation, route}) => {
             'items': [
                 {
                     'id': (Math.random() + 1).toString(36).substring(2),
-                    'name': "vending machine app purchase",
+                    'name': 'vending machine app purchase',
                     'quantity': '1',
                     'picture_url': 'https://',
                     'unit_price': price.toFixed(2),
@@ -88,9 +89,14 @@ const QR = ({navigation, route}) => {
     }
 
     return (
-        <SafeAreaView style={{flex: 1, marginHorizontal: 20}}>
+        <SafeAreaView style={{
+            flex: 1,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginHorizontal: 20,
+        }}>
             <View style={{
-                flex: 1,
+                flex: 3,
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
@@ -102,31 +108,35 @@ const QR = ({navigation, route}) => {
                         textAlign: 'center',
                         marginBottom: 30,
                     }}>
-                    Scan to pay with ORO Wallet
+                    Scan to pay withORO Wallet
                 </Text>
                 <QRCode
                     value={`vending/${qrData.qr_data}`}
                     size={200}
                 />
             </View>
-            <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{
-                    backgroundColor: '#2a3498',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 10,
-                    width: '100%',
-                    height: 50,
-                    marginBottom: 20,
-                }}>
-                <Text style={{
-                    fontSize: 15,
-                    color: '#fff',
-                }}>
-                    CANCEL
-                </Text>
-            </TouchableOpacity>
+            <View style={{
+                flex: 1,
+                width: '100%',
+            }}>
+                <TouchableOpacity
+                    onPress={() => navigation.goBack()}
+                    style={{
+                        backgroundColor: '#2196F3',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 15,
+                        fontSize: 18, width: '100%',
+                        height: 60,
+                    }}>
+                    <Text style={{
+                        color: '#fff',
+                        fontSize: 18,
+                    }}>
+                        CANCEL
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 };

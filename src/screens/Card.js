@@ -20,14 +20,16 @@ const Card = ({navigation, route}) => {
                     console.log(parseInt(balance.substring(slot, balance.length - 4), 16));
                     if (price > parseInt(balance.substring(slot, balance.length - 4), 16)) {
                         navigation.replace('Result', {
-                            success: 0,
-                            result: 'not enough oro card balance',
+                            success: false,
+                            result: 'ORO Card Payment Fail',
+                            message: "not enough card balance"
                         });
                     } else {
                         await card.removeBalance(slot, price);
                         navigation.replace('Result', {
-                            success: 1,
-                            result: 'oro card payment success',
+                            success: true,
+                            result: 'ORO Card Payment Success',
+                            message: ""
                         });
                     }
                 }
@@ -66,10 +68,15 @@ const Card = ({navigation, route}) => {
     // );
 
     return (
-        <SafeAreaView style={{flex: 1, marginHorizontal: 20}}>
+        <SafeAreaView style={{
+            flex: 1,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginHorizontal: 20,
+        }}>
             <View
                 style={{
-                    flex: 1,
+                    flex: 3,
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
@@ -91,24 +98,28 @@ const Card = ({navigation, route}) => {
                     resizeMode="contain"
                 />
             </View>
-            <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{
-                    backgroundColor: '#2a3498',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 10,
-                    width: '100%',
-                    height: 50,
-                    marginBottom: 20,
-                }}>
-                <Text style={{
-                    fontSize: 15,
-                    color: '#fff',
-                }}>
-                    CANCEL
-                </Text>
-            </TouchableOpacity>
+            <View style={{
+                flex: 1,
+                width: '100%',
+            }}>
+                <TouchableOpacity
+                    onPress={() => navigation.goBack()}
+                    style={{
+                        backgroundColor: '#2196F3',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 15,
+                        fontSize: 18, width: '100%',
+                        height: 60,
+                    }}>
+                    <Text style={{
+                        color: '#fff',
+                        fontSize: 18,
+                    }}>
+                        CANCEL
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 };
