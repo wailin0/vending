@@ -7,7 +7,6 @@ import {images} from '../constants/theme';
 const Main = ({navigation}) => {
 
     const start = async () => {
-        navigation.replace('Select Item');
         try {
             const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
             await serialPort.send('03FFFF01');

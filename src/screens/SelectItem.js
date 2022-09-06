@@ -29,9 +29,6 @@ const SelectItem = ({navigation}) => {
 
 
     useState(() => {
-     setTimeout(() => {
-         navigation.replace('Select Payment', {price: 6});
-     }, 4000)
         async function startSession() {
             try {
                 const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
