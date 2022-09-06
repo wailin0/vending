@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import card from '../utils/card';
+import SerialPortAPI from 'react-native-serial-port-api';
 
 const Card = ({navigation, route}) => {
 
@@ -9,6 +10,7 @@ const Card = ({navigation, route}) => {
     const checkCard = async () => {
         const slot = 0;
         try {
+            const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
             await card.start();
             const interval = setInterval(async () => {
                 await card.connect(slot);
@@ -19,12 +21,14 @@ const Card = ({navigation, route}) => {
                     clearInterval(interval);
                     console.log(parseInt(balance.substring(slot, balance.length - 4), 16));
                     if (price > parseInt(balance.substring(slot, balance.length - 4), 16)) {
+                        await serialPort.send('0606');
                         navigation.replace('Result', {
                             success: false,
                             result: 'ORO Card Payment Fail',
                             message: "not enough card balance"
                         });
                     } else {
+                        await serialPort.send('05000A0F');
                         await card.removeBalance(slot, price);
                         navigation.replace('Result', {
                             success: true,

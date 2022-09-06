@@ -4,6 +4,7 @@ import QRCode from 'react-native-qrcode-svg';
 import api from '../services/api';
 import Loading from './Loading';
 import {configs} from '../utils/configs';
+import SerialPortAPI from 'react-native-serial-port-api';
 
 const QR = ({navigation, route}) => {
 
@@ -15,7 +16,7 @@ const QR = ({navigation, route}) => {
         if (qrData) {
             const checkQR = async () => {
                 try {
-                    // const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+                    const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
                     interval = setInterval(async () => {
                         const postData = {
                             'transaction_id': qrData.transaction_id,
@@ -24,14 +25,14 @@ const QR = ({navigation, route}) => {
                         };
                         const response = await api.checkQR(postData);
                         if (response.status === 1) {
-                            // await serialPort.send('05000A0F');
+                            await serialPort.send('05000A0F');
                             navigation.replace('Result', {
                                 success: true,
                                 result: 'QR Payment Success',
                                 message: '',
                             });
                         } else if (response.status === -1) {
-                            //  await serialPort.send('0606');
+                            await serialPort.send('0606');
                             navigation.replace('Result', {
                                 success: false,
                                 result: 'QR Payment Fail',
