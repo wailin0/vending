@@ -16,25 +16,19 @@ const Result = ({navigation, route}) => {
                 const sub = serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
                     if (response === '130417') {
-                        serialPort.send('0707').then(buff => {
-                            const response = decodeVMC(buff);
+                        serialPort.send('0707');
+                        sub.remove();
+                        setTimeout(() => {
+                            navigation.dispatch(
+                                CommonActions.reset({
+                                    index: 1,
+                                    routes: [
+                                        {name: 'Main'},
 
-
-                            sub.remove();
-                            setTimeout(() => {
-                                navigation.dispatch(
-                                    CommonActions.reset({
-                                        index: 1,
-                                        routes: [
-                                            {name: 'Main'},
-
-                                        ],
-                                    }),
-                                );
-                            }, 3000);
-
-                        });
-
+                                    ],
+                                }),
+                            );
+                        }, 3000);
                     }
                 });
             } catch (e) {
