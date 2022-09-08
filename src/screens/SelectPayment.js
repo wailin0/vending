@@ -1,36 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
-import SerialPortAPI from 'react-native-serial-port-api';
 import {CommonActions} from '@react-navigation/native';
-import {decodeVMC} from '../utils/vmc';
+import StartOverButton from '../components/StartOverButton';
 
 const SelectPayment = ({navigation, route}) => {
 
     const {price} = route.params;
 
     const navigatePayment = async (type) => {
-        navigation.navigate(type, {price});
-    };
-
-
-    const startOver = async () => {
-        const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
-        await serialPort.send('0707');
-        const sub = serialPort.onReceived(buff => {
-            const response = decodeVMC(buff);
-            if (response === '00') {
-                sub.remove();
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 1,
-                        routes: [
-                            {name: 'Main'},
-
-                        ],
-                    }),
-                );
-            }
-        });
+        navigation.replace(type, {price});
     };
 
     return (
@@ -108,28 +86,8 @@ const SelectPayment = ({navigation, route}) => {
                     </View>
                 </View>
             </View>
-            <View style={{
-                flex: 1,
-                width: '100%',
-            }}>
-                <TouchableOpacity
-                    onPress={startOver}
-                    style={{
-                        backgroundColor: '#2196F3',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: 15,
-                        width: '100%',
-                        height: 60,
-                    }}>
-                    <Text style={{
-                        color: '#fff',
-                        fontSize: 18,
-                    }}>
-                        START OVER
-                    </Text>
-                </TouchableOpacity>
-            </View>
+
+            <StartOverButton navigation={navigation}/>
         </SafeAreaView>
     );
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
-import {decodeVMC} from '../utils/vmc';
 import {images} from '../constants/theme';
 
 const Main = ({navigation}) => {
@@ -10,13 +9,7 @@ const Main = ({navigation}) => {
         try {
             const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
             await serialPort.send('03FFFF01');
-            const sub = serialPort.onReceived(buff => {
-                const response = decodeVMC(buff);
-                if (response === '00') {
-                    sub.remove();
-                    navigation.replace('Select Item');
-                }
-            });
+            navigation.replace('Select Item');
         } catch (e) {
             console.log(e);
         }

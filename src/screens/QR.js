@@ -5,6 +5,7 @@ import api from '../services/api';
 import Loading from './Loading';
 import {configs} from '../utils/configs';
 import SerialPortAPI from 'react-native-serial-port-api';
+import StartOverButton from '../components/StartOverButton';
 
 const QR = ({navigation, route}) => {
 
@@ -116,28 +117,7 @@ const QR = ({navigation, route}) => {
                     size={200}
                 />
             </View>
-            <View style={{
-                flex: 1,
-                width: '100%',
-            }}>
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    style={{
-                        backgroundColor: '#2196F3',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: 15,
-                        fontSize: 18, width: '100%',
-                        height: 60,
-                    }}>
-                    <Text style={{
-                        color: '#fff',
-                        fontSize: 18,
-                    }}>
-                        CANCEL
-                    </Text>
-                </TouchableOpacity>
-            </View>
+            <StartOverButton navigation={navigation}/>
         </SafeAreaView>
     );
 };

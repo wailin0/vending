@@ -1,32 +1,11 @@
 import React, {useState} from 'react';
-import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {Image, SafeAreaView, Text, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
-import {CommonActions} from '@react-navigation/native';
 import {decodeVMC} from '../utils/vmc';
 import {images} from '../constants/theme';
+import StartOverButton from '../components/StartOverButton';
 
 const SelectItem = ({navigation}) => {
-
-    const startOver = async () => {
-        const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
-        await serialPort.send('0707');
-        const sub = serialPort.onReceived(buff => {
-            const response = decodeVMC(buff);
-            if (response === '00') {
-                sub.remove();
-                navigation.dispatch(
-                    CommonActions.reset({
-                        index: 1,
-                        routes: [
-                            {name: 'Main'},
-
-                        ],
-                    }),
-                );
-            }
-        });
-    };
-
 
     useState(() => {
         async function startSession() {
@@ -80,28 +59,8 @@ const SelectItem = ({navigation}) => {
                     resizeMode="contain"
                 />
             </View>
-            <View style={{
-                flex: 1,
-                width: '100%',
-            }}>
-                <TouchableOpacity
-                    onPress={startOver}
-                    style={{
-                        backgroundColor: '#2196F3',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: 15,
-                        width: '100%',
-                        height: 60,
-                    }}>
-                    <Text style={{
-                        color: '#fff',
-                        fontSize: 18,
-                    }}>
-                        START OVER
-                    </Text>
-                </TouchableOpacity>
-            </View>
+
+            <StartOverButton navigation={navigation}/>
         </SafeAreaView>
     );
 };

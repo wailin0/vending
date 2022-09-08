@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
-import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {Image, SafeAreaView, Text, View} from 'react-native';
 import card from '../utils/card';
 import SerialPortAPI from 'react-native-serial-port-api';
+import StartOverButton from '../components/StartOverButton';
 
 const Card = ({navigation, route}) => {
 
@@ -25,7 +26,7 @@ const Card = ({navigation, route}) => {
                         navigation.replace('Result', {
                             success: false,
                             result: 'ORO Card Payment Fail',
-                            message: "not enough card balance"
+                            message: 'not enough card balance',
                         });
                     } else {
                         await serialPort.send('05000A0F');
@@ -33,7 +34,7 @@ const Card = ({navigation, route}) => {
                         navigation.replace('Result', {
                             success: true,
                             result: 'ORO Card Payment Success',
-                            message: ""
+                            message: '',
                         });
                     }
                 }
@@ -46,30 +47,6 @@ const Card = ({navigation, route}) => {
     useEffect(() => {
         checkCard();
     }, []);
-
-    //
-    // useEffect(
-    //     () =>
-    //         navigation.addListener('beforeRemove', (e) => {
-    //             e.preventDefault();
-    //             Alert.alert(
-    //                 '',
-    //                 'Cancel ORO Card payment?',
-    //                 [
-    //                     {
-    //                         text: 'cancel',
-    //                         onPress: () => {
-    //                         },
-    //                     },
-    //                     {
-    //                         text: 'confirm',
-    //                         onPress: () => navigation.dispatch(e.data.action),
-    //                     },
-    //                 ],
-    //             );
-    //         }),
-    //     [navigation],
-    // );
 
     return (
         <SafeAreaView style={{
@@ -102,28 +79,7 @@ const Card = ({navigation, route}) => {
                     resizeMode="contain"
                 />
             </View>
-            <View style={{
-                flex: 1,
-                width: '100%',
-            }}>
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    style={{
-                        backgroundColor: '#2196F3',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: 15,
-                        fontSize: 18, width: '100%',
-                        height: 60,
-                    }}>
-                    <Text style={{
-                        color: '#fff',
-                        fontSize: 18,
-                    }}>
-                        CANCEL
-                    </Text>
-                </TouchableOpacity>
-            </View>
+            <StartOverButton navigation={navigation}/>
         </SafeAreaView>
     );
 };
