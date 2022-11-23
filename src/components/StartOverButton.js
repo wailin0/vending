@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {CommonActions} from '@react-navigation/native';
 import {Text, TouchableOpacity, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
+import {fonts} from '../constants/theme';
 
 const StartOverButton = ({navigation}) => {
 
@@ -43,10 +44,10 @@ const StartOverButton = ({navigation}) => {
                     height: 60,
                 }}>
                 <Text style={{
+                    ...fonts.h3,
                     color: '#fff',
-                    fontSize: 18,
                 }}>
-                    START OVER
+                    Restart
                 </Text>
             </TouchableOpacity>
         </View>

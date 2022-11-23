@@ -3,6 +3,7 @@ import {Image, SafeAreaView, Text, View} from 'react-native';
 import card from '../utils/card';
 import SerialPortAPI from 'react-native-serial-port-api';
 import StartOverButton from '../components/StartOverButton';
+import {fonts} from '../constants/theme';
 
 const Card = ({navigation, route}) => {
 
@@ -20,7 +21,6 @@ const Card = ({navigation, route}) => {
                 if (verifyPin === '9000') {
                     const balance = await card.checkBalance(slot);
                     clearInterval(interval);
-                    console.log(parseInt(balance.substring(slot, balance.length - 4), 16));
                     if (price > parseInt(balance.substring(slot, balance.length - 4), 16)) {
                         await serialPort.send('0606');
                         navigation.replace('Result', {
@@ -63,7 +63,7 @@ const Card = ({navigation, route}) => {
                 }}>
                 <Text
                     style={{
-                        fontSize: 20,
+                        ...fonts.h3,
                         color: '#000',
                         fontWeight: 'bold',
                         marginBottom: 30,

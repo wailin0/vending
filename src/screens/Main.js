@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
-import {images} from '../constants/theme';
+import {fonts, images} from '../constants/theme';
 
 const Main = ({navigation}) => {
 
@@ -21,11 +21,21 @@ const Main = ({navigation}) => {
             alignItems: 'center',
             marginHorizontal: 20,
         }}>
+
+
             <View style={{
                 flex: 3,
                 width: '100%',
                 height: '100%',
             }}>
+
+                {/*<Text style={{*/}
+                {/*    marginTop: 50,*/}
+                {/*    fontSize: 17,*/}
+                {/*    color: 'black',*/}
+                {/*}}>*/}
+                {/*    DEVELOPMENT VERSION (10-26-2022)*/}
+                {/*</Text>*/}
                 <Image source={{uri: images.welcome}}
                        style={{
                            width: '100%',
@@ -33,7 +43,10 @@ const Main = ({navigation}) => {
                        }}
                        resizeMode="contain"
                 />
+
             </View>
+
+
             <View style={{
                 flex: 1,
                 width: '100%',
@@ -49,8 +62,8 @@ const Main = ({navigation}) => {
                         height: 60,
                     }}>
                     <Text style={{
+                        ...fonts.h3,
                         color: '#fff',
-                        fontSize: 18,
                     }}>
                         START
                     </Text>

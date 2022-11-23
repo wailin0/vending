@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Image, SafeAreaView, Text, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
 import {decodeVMC} from '../utils/vmc';
-import {images} from '../constants/theme';
+import {fonts, images} from '../constants/theme';
 import StartOverButton from '../components/StartOverButton';
 
 const SelectItem = ({navigation}) => {
@@ -44,7 +44,7 @@ const SelectItem = ({navigation}) => {
                 height: '100%',
             }}>
                 <Text style={{
-                    fontSize: 20,
+                    ...fonts.h3,
                     color: '#000',
                     fontWeight: 'bold',
                 }}>

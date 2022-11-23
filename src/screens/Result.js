@@ -3,7 +3,7 @@ import {Image, SafeAreaView, Text, View} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import SerialPortAPI from 'react-native-serial-port-api';
 import {decodeVMC} from '../utils/vmc';
-import {icons} from '../constants/theme';
+import {fonts, icons} from '../constants/theme';
 
 const Result = ({navigation, route}) => {
 
@@ -55,15 +55,16 @@ const Result = ({navigation, route}) => {
                     }}
                 />
                 <Text style={{
+                    ...fonts.h3,
                     color: '#000',
                     marginTop: 20,
-                    fontSize: 20,
                 }}>
                     {result}
                 </Text>
             </View>
 
             <Text style={{
+                ...fonts.h3,
                 marginBottom: 40,
                 textAlign: 'center',
             }}>

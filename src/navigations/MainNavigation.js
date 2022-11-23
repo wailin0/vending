@@ -6,6 +6,7 @@ import Card from '../screens/Card';
 import Main from '../screens/Main';
 import SelectItem from '../screens/SelectItem';
 import Result from '../screens/Result';
+import LogoutDevice from '../screens/LogoutDevice';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const MainNavigation = () => {
             <Stack.Screen name="QR" component={QR}/>
             <Stack.Screen name="Card" component={Card}/>
             <Stack.Screen name="Result" component={Result}/>
+            <Stack.Screen name="Logout Device" component={LogoutDevice}/>
         </Stack.Navigator>
     );
 };

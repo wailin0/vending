@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import StartOverButton from '../components/StartOverButton';
+import {fonts} from '../constants/theme';
 
 const SelectPayment = ({navigation, route}) => {
 
@@ -36,7 +37,7 @@ const SelectPayment = ({navigation, route}) => {
                     flex: 1,
                 }}>
                     <Text style={{
-                        fontSize: 20,
+                        ...fonts.h2,
                         color: '#000',
                         fontWeight: 'bold',
                         textAlign: 'center',
@@ -60,8 +61,8 @@ const SelectPayment = ({navigation, route}) => {
                                 borderRadius: 10,
                             }}>
                             <Text style={{
+                                ...fonts.h3,
                                 color: '#fff',
-                                fontSize: 18,
                             }}>
                                 QR
                             </Text>
@@ -77,8 +78,8 @@ const SelectPayment = ({navigation, route}) => {
                                 borderRadius: 10,
                             }}>
                             <Text style={{
+                                ...fonts.h3,
                                 color: '#fff',
-                                fontSize: 18,
                             }}>
                                 ORO CARD
                             </Text>
