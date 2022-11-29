@@ -4,6 +4,7 @@ import {CommonActions} from '@react-navigation/native';
 import SerialPortAPI from 'react-native-serial-port-api';
 import {decodeVMC} from '../utils/vmc';
 import {fonts, icons} from '../constants/theme';
+import {configs} from '../utils/configs';
 
 const Result = ({navigation, route}) => {
 
@@ -12,7 +13,7 @@ const Result = ({navigation, route}) => {
     useEffect(() => {
         async function endSession() {
             try {
-                const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+                const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
                 const sub = serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
                     if (response === '130417') {

@@ -4,6 +4,7 @@ import card from '../utils/card';
 import SerialPortAPI from 'react-native-serial-port-api';
 import StartOverButton from '../components/StartOverButton';
 import {fonts} from '../constants/theme';
+import {configs} from '../utils/configs';
 
 const Card = ({navigation, route}) => {
 
@@ -12,7 +13,7 @@ const Card = ({navigation, route}) => {
     const checkCard = async () => {
         const slot = 0;
         try {
-            const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+            const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
             await card.start();
             const interval = setInterval(async () => {
                 await card.connect(slot);

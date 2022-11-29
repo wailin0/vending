@@ -4,15 +4,17 @@ import SerialPortAPI from 'react-native-serial-port-api';
 import {decodeVMC} from '../utils/vmc';
 import {fonts, images} from '../constants/theme';
 import StartOverButton from '../components/StartOverButton';
+import {configs} from '../utils/configs';
 
 const SelectItem = ({navigation}) => {
 
     useState(() => {
         async function startSession() {
             try {
-                const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+                const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
                 const sub = serialPort.onReceived(buff => {
                     const response = decodeVMC(buff);
+                    alert(response)
                     if (response.substr(0, 4) === '1300') {
                         sub.remove();
                         const price = parseInt(response.substr(4, 4), 16) / 100;
@@ -20,6 +22,7 @@ const SelectItem = ({navigation}) => {
                     }
                 });
             } catch (e) {
+                alert(e)
                 console.log(e);
             }
         }

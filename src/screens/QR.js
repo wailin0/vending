@@ -6,6 +6,7 @@ import Loading from './Loading';
 import SerialPortAPI from 'react-native-serial-port-api';
 import StartOverButton from '../components/StartOverButton';
 import {fonts} from '../constants/theme';
+import {configs} from '../utils/configs';
 
 const QR = ({navigation, route}) => {
 
@@ -17,7 +18,7 @@ const QR = ({navigation, route}) => {
         if (qrData) {
             const checkQR = async () => {
                 try {
-                    const serialPort = await SerialPortAPI.open('/dev/ttyS5', {baudRate: 9600});
+                    const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
                     interval = setInterval(async () => {
                         const postData = {
                             'transaction_id': qrData.transaction_id,
