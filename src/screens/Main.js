@@ -3,18 +3,16 @@ import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
 import {fonts, images} from '../constants/theme';
 import {configs} from '../utils/configs';
-import axios from 'axios';
 
 const Main = ({navigation}) => {
 
 
-
     const start = async () => {
+        navigation.replace('Select Item');
         try {
-            const p = await SerialPortAPI.devicePathsAsync()
-            alert(p)
-            const response = await axios.get("https://oro-wallet-2cc2c-default-rtdb.asia-southeast1.firebasedatabase.app/port.json")
-            const serialPort = await SerialPortAPI.open(response.data, {baudRate: 9600});
+            const p = await SerialPortAPI.devicePathsAsync();
+            alert(p);
+            const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
             await serialPort.send('03FFFF01');
             navigation.replace('Select Item');
         } catch (e) {

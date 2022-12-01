@@ -5,9 +5,25 @@ import storage from './src/utils/storage';
 import KeyInput from './src/screens/KeyInput';
 import {Context} from './src/components/Context';
 import {navigationRef} from './src/navigations/rootNavigation';
+import { RNSerialport, definitions, actions } from "react-native-usb-serialport";
 
 const App = () => {
     const [hasKey, setHasKey] = useState(false);
+
+
+    const start = async () => {
+        try {
+            RNSerialport.startUsbService()
+            RNSerialport.getDeviceList().then(res => console.log(res))
+        }
+        catch (e) {
+            console.log(e)
+        }
+    }
+
+    useEffect(() => {
+        start()
+    }, []);
 
     useEffect(() => {
         storage.getItem().then(item => {
@@ -18,7 +34,7 @@ const App = () => {
             }
         });
     }, []);
-
+    
     return (
         <Context.Provider value={{hasKey, setHasKey}}>
             {hasKey

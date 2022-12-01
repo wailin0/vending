@@ -1,52 +1,62 @@
 import React, {useEffect} from 'react';
-import {Image, SafeAreaView, Text, View} from 'react-native';
-import card from '../utils/card';
+import {Alert, Image, SafeAreaView, Text, View} from 'react-native';
 import SerialPortAPI from 'react-native-serial-port-api';
 import StartOverButton from '../components/StartOverButton';
 import {fonts} from '../constants/theme';
 import {configs} from '../utils/configs';
+import NfcManager from 'react-native-nfc-manager';
+import nfc from '../utils/nfc';
 
 const Card = ({navigation, route}) => {
 
     const {price} = route.params;
 
-    const checkCard = async () => {
-        const slot = 0;
+    const checkNFC = async () => {
         try {
-            const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
-            await card.start();
-            const interval = setInterval(async () => {
-                await card.connect(slot);
-                await card.selectApplet(slot);
-                const verifyPin = await card.verifyPin(slot);
-                if (verifyPin === '9000') {
-                    const balance = await card.checkBalance(slot);
-                    clearInterval(interval);
-                    if (price > parseInt(balance.substring(slot, balance.length - 4), 16)) {
-                        await serialPort.send('0606');
-                        navigation.replace('Result', {
-                            success: false,
-                            result: 'ORO Card Payment Fail',
-                            message: 'not enough card balance',
-                        });
-                    } else {
-                        await serialPort.send('05000A0F');
-                        await card.removeBalance(slot, price);
-                        navigation.replace('Result', {
-                            success: true,
-                            result: 'ORO Card Payment Success',
-                            message: '',
-                        });
-                    }
+            //const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
+            const supported = await NfcManager.isSupported();
+            if (supported) {
+                const enabled = await NfcManager.isEnabled();
+                if (enabled) {
+                    const status = await nfc.payWithOROCard(price);
+                    console.log(status)
+                    //await serialPort.send('0606');
+                    // navigation.replace('Result', {
+                    //     success: false,
+                    //     result: 'ORO Card Payment Fail',
+                    //     message: 'not enough card balance',
+                    // });
+
+                    // await serialPort.send('05000A0F');
+                    // await nfc.removeBalance(slot, price);
+                    // navigation.replace('Result', {
+                    //     success: true,
+                    //     result: 'ORO Card Payment Success',
+                    //     message: '',
+                    // });
+
+                } else {
+                    Alert.alert(
+                        'Alert',
+                        'NFC is disabled, go to setting?',
+                        [
+                            {text: 'OK', onPress: () => NfcManager.goToNfcSetting()},
+                        ],
+                    );
                 }
-            }, 2000);
+            } else {
+                alert('Your device doesn\'t support NFC');
+                navigation.goBack();
+            }
         } catch (e) {
-            alert(e);
+            console.log(e);
         }
     };
 
+
     useEffect(() => {
-        checkCard();
+        checkNFC();
+        return () => NfcManager.cancelTechnologyRequest();
     }, []);
 
     return (

@@ -9,6 +9,7 @@ import {configs} from '../utils/configs';
 const SelectItem = ({navigation}) => {
 
     useState(() => {
+        navigation.replace('Select Payment', {price:20});
         async function startSession() {
             try {
                 const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
@@ -22,7 +23,6 @@ const SelectItem = ({navigation}) => {
                     }
                 });
             } catch (e) {
-                alert(e)
                 console.log(e);
             }
         }
