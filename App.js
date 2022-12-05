@@ -6,10 +6,15 @@ import KeyInput from './src/screens/KeyInput';
 import {Context} from './src/components/Context';
 import {navigationRef} from './src/navigations/rootNavigation';
 import Loading from './src/screens/Loading';
+import SerialPortAPI from 'react-native-serial-port-api';
 
 const App = () => {
     const [hasKey, setHasKey] = useState(false);
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        SerialPortAPI.devicePathsAsync().then(r => alert('serial port list, \n'+r));
+    }, []);
 
     useEffect(() => {
         setLoading(true)

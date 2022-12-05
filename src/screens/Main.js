@@ -6,7 +6,6 @@ import {configs} from '../utils/configs';
 
 const Main = ({navigation}) => {
 
-
     const start = async () => {
         navigation.navigate('Select Item');
         try {
