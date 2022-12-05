@@ -14,7 +14,7 @@ const App = () => {
     const start = async () => {
         try {
             RNSerialport.startUsbService()
-            RNSerialport.getDeviceList().then(res => console.log(res))
+            RNSerialport.getDeviceList().then(res => alert(JSON.stringify(res)))
         }
         catch (e) {
             console.log(e)
@@ -34,7 +34,7 @@ const App = () => {
             }
         });
     }, []);
-    
+
     return (
         <Context.Provider value={{hasKey, setHasKey}}>
             {hasKey
