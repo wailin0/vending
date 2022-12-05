@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {Alert, Image, SafeAreaView, Text, View} from 'react-native';
-import SerialPortAPI from 'react-native-serial-port-api';
 import StartOverButton from '../components/StartOverButton';
 import {fonts} from '../constants/theme';
-import {configs} from '../utils/configs';
 import NfcManager from 'react-native-nfc-manager';
 import nfc from '../utils/nfc';
+import SerialPortAPI from 'react-native-serial-port-api';
+import {configs} from '../utils/configs';
 
 const Card = ({navigation, route}) => {
 
@@ -13,28 +13,27 @@ const Card = ({navigation, route}) => {
 
     const checkNFC = async () => {
         try {
-            //const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
+           // const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
             const supported = await NfcManager.isSupported();
             if (supported) {
                 const enabled = await NfcManager.isEnabled();
                 if (enabled) {
-                    const status = await nfc.payWithOROCard(price);
-                    console.log(status)
-                    //await serialPort.send('0606');
-                    // navigation.replace('Result', {
-                    //     success: false,
-                    //     result: 'ORO Card Payment Fail',
-                    //     message: 'not enough card balance',
-                    // });
-
-                    // await serialPort.send('05000A0F');
-                    // await nfc.removeBalance(slot, price);
-                    // navigation.replace('Result', {
-                    //     success: true,
-                    //     result: 'ORO Card Payment Success',
-                    //     message: '',
-                    // });
-
+                    const success = await nfc.payWithOROCard(price);
+                    if (success) {
+                       // await serialPort.send('0606');
+                        navigation.replace('Result', {
+                            success: true,
+                            result: 'ORO Card Payment Success',
+                            message: '',
+                        });
+                    } else {
+                       // await serialPort.send('05000A0F');
+                        navigation.replace('Result', {
+                            success: false,
+                            result: 'ORO Card Payment Fail',
+                            message: 'not enough card balance',
+                        });
+                    }
                 } else {
                     Alert.alert(
                         'Alert',

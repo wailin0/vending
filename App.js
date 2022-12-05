@@ -5,35 +5,27 @@ import storage from './src/utils/storage';
 import KeyInput from './src/screens/KeyInput';
 import {Context} from './src/components/Context';
 import {navigationRef} from './src/navigations/rootNavigation';
-import { RNSerialport, definitions, actions } from "react-native-usb-serialport";
+import Loading from './src/screens/Loading';
 
 const App = () => {
     const [hasKey, setHasKey] = useState(false);
-
-
-    const start = async () => {
-        try {
-            RNSerialport.startUsbService()
-            RNSerialport.getDeviceList().then(res => alert(JSON.stringify(res)))
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        start()
-    }, []);
-
-    useEffect(() => {
+        setLoading(true)
         storage.getItem().then(item => {
             if (item) {
                 setHasKey(true);
             } else {
                 setHasKey(false);
             }
+            setLoading(false)
         });
     }, []);
+
+    if (loading){
+        return <Loading />
+    }
 
     return (
         <Context.Provider value={{hasKey, setHasKey}}>

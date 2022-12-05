@@ -8,10 +8,8 @@ const Main = ({navigation}) => {
 
 
     const start = async () => {
-        navigation.replace('Select Item');
+        navigation.navigate('Select Item');
         try {
-            const p = await SerialPortAPI.devicePathsAsync();
-            alert(p);
             const serialPort = await SerialPortAPI.open(configs.vendingSerialPort, {baudRate: 9600});
             await serialPort.send('03FFFF01');
             navigation.replace('Select Item');
@@ -41,7 +39,7 @@ const Main = ({navigation}) => {
                 {/*}}>*/}
                 {/*    DEVELOPMENT VERSION (10-26-2022)*/}
                 {/*</Text>*/}
-                <Image source={{uri: images.welcome}}
+                <Image source={images.welcome}
                        style={{
                            width: '100%',
                            height: '100%',

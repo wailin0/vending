@@ -1,5 +1,4 @@
 import NfcManager, {NfcTech} from 'react-native-nfc-manager';
-import {Platform} from 'react-native';
 
 
 function hexToBytes(hex) {
@@ -46,8 +45,16 @@ const payWithOROCard = async (price) => {
         const balanceBytes = await NfcManager.isoDepHandler.transceive(checkBalanceBytes);
         const hex = bytesToHex(balanceBytes);
         if (hex.slice(-4) === '9000') {
-            const cardBalance = parseInt(hex.slice(0, -4), 16)
-            return price <= cardBalance;
+            const cardBalance = parseInt(hex.slice(0, -4), 16);
+            if (price <= cardBalance) {
+                const {prefix, hex2Complement} = await dec2Hex(Math.floor(Number(price)));
+                const balanceRemoveBytes = hexToBytes('80400000' + prefix + hex2Complement);
+                const paymentResponseBytes = await NfcManager.isoDepHandler.transceive(balanceRemoveBytes);
+                const paymentResponseHex = bytesToHex(paymentResponseBytes);
+                return paymentResponseHex.slice(-4) === '9000';
+            } else {
+                return false;
+            }
         } else {
             alert('failed to scan ORO card, please try again');
             NfcManager.cancelTechnologyRequest();
